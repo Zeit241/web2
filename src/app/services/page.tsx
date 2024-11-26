@@ -8,6 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Heart,
@@ -176,9 +187,7 @@ export default function ServicesPage() {
                     </li>
                   ))}
                 </ul>
-                <Button className="mt-6 bg-blue-600 text-white hover:bg-blue-700">
-                  Узнать больше
-                </Button>
+
               </div>
               <div className="relative h-[300px] sm:h-[400px] rounded-lg overflow-hidden">
                 <Image
@@ -258,16 +267,45 @@ export default function ServicesPage() {
                 готова предоставить вам персонализированную, комплексную помощь.
               </p>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button className="bg-blue-600 text-white hover:bg-blue-700">
-                  Записаться на прием
-                </Button>
-                <Button variant="outline">Связаться с нами</Button>
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <Button className="bg-blue-600 text-white hover:bg-blue-700">
+                      Записаться на прием
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogDescription>
+                        Для записи в нашу клинику необходимо позвонить в регистратуру по номеру +7999999999
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Ок</AlertDialogCancel>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <Button variant="outline">Связаться с нами</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogDescription>
+                        Для записи в нашу клинику необходимо позвонить в регистратуру по номеру +7999999999
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Ок</AlertDialogCancel>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+
               </div>
             </div>
           </div>
         </section>
       </main>
       <Footer />
-    </div>
+    </div >
   );
 }

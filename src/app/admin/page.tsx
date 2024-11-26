@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import DashboardTable from "@/components/Table";
+import { signOut } from "next-auth/react";
 
 type TabType = "doctors" | "services" | "news";
 
@@ -130,7 +131,7 @@ export default function Page() {
             </span>
           </Link>
           <nav className="flex gap-4 sm:gap-6">
-            <Button className="text-base font-medium" variant="link">
+            <Button className="text-base font-medium" variant="link" onClick={() => signOut()}>
               Выйти
             </Button>
           </nav>

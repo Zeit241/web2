@@ -5,10 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Award, Clock, MapPin, Phone, Users } from "lucide-react";
+import { Award, Clock, MapPin, Phone, Users, SquareActivity, Ambulance } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function AboutUs() {
   return (
@@ -48,15 +49,17 @@ export default function AboutUs() {
                 </p>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50"
-                    href="#"
+                    className="inline-flex h-10 gap-2 items-center justify-center rounded-md bg-blue-600 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                    href="/services"
                   >
+                    <SquareActivity />
                     Наши Услуги
                   </Link>
                   <Link
-                    className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                    href="#"
+                    className="inline-flex h-10 gap-2 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                    href="/doctors"
                   >
+                    <Ambulance />
                     Познакомьтесь с Врачами
                   </Link>
                 </div>
@@ -166,7 +169,7 @@ export default function AboutUs() {
                     alt="Доктор Эмили Чен"
                     className="mx-auto rounded-full"
                     height="150"
-                    src="/placeholder.svg?height=150&width=150"
+                    src="/images/vecteezy_a-young-doctor-woman-wears-a-lab-coat-and-stethoscope-in_7483472.jpg"
                     style={{
                       aspectRatio: "150/150",
                       objectFit: "cover",
@@ -174,7 +177,7 @@ export default function AboutUs() {
                     width="150"
                   />
                   <CardTitle className="text-center mt-4">
-                    Доктор Эмили Чен
+                    Доктор Светлана Иванченко
                   </CardTitle>
                   <CardDescription className="text-center">
                     Главный Врач
@@ -183,7 +186,7 @@ export default function AboutUs() {
                 <CardContent>
                   <p className="text-sm text-gray-500 text-center">
                     Более 20 лет опыта в медицине и преданность пациентам делают
-                    Эмили Чен выдающимся специалистом.
+                    Светлану выдающимся специалистом.
                   </p>
                 </CardContent>
               </Card>
@@ -193,7 +196,7 @@ export default function AboutUs() {
                     alt="Майкл Томпсон"
                     className="mx-auto rounded-full"
                     height="150"
-                    src="/placeholder.svg?height=150&width=150"
+                    src="/images/vecteezy_portrait-of-girl-doctor-illustration_23570077.jpg"
                     style={{
                       aspectRatio: "150/150",
                       objectFit: "cover",
@@ -201,7 +204,7 @@ export default function AboutUs() {
                     width="150"
                   />
                   <CardTitle className="text-center mt-4">
-                    Майкл Томпсон
+                    Ирина Путина
                   </CardTitle>
                   <CardDescription className="text-center">
                     Генеральный Директор
@@ -209,7 +212,7 @@ export default function AboutUs() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 text-center">
-                    Опыт в управлении здравоохранением помогает Майклу
+                    Опыт в управлении здравоохранением помогает Ирине
                     направлять стратегическое развитие клиники.
                   </p>
                 </CardContent>
@@ -218,6 +221,7 @@ export default function AboutUs() {
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

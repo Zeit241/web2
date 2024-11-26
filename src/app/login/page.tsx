@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,29 +13,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lock, AlertCircle } from "lucide-react";
+import { Lock, AlertCircle, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
-
+import { signIn } from "next-auth/react"
 export default function AdminLogin() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState("");
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true)
+    const response = await signIn("credentials", {
+      username: username,
+      password: password,
+      redirect: false,
+    });
 
-    // This is a placeholder for actual authentication logic
-    // In a real application, you would make an API call to your backend here
-    if (username === "admin" && password === "password") {
-      // Successful login
-      console.log("Login successful");
-      router.push("/admin");
-      // Redirect to admin dashboard or set authentication state
+    if (!response?.error) {
+      setIsLoading(false)
+      router.push("/admin")
     } else {
-      setError("Invalid username or password");
+      setIsLoading(false)
+      setError("Неверные данные")
     }
   };
 
@@ -46,17 +51,17 @@ export default function AdminLogin() {
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
-              Admin Login
+              Админка
             </CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access the admin panel
+              Введите данные для входа в админ панель
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username">Имя пользователя</Label>
                   <Input
                     id="username"
                     placeholder="Enter your username"
@@ -66,12 +71,13 @@ export default function AdminLogin() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Пароль</Label>
                   <Input
                     id="password"
                     type="password"
                     placeholder="Enter your password"
                     value={password}
+
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
@@ -80,12 +86,12 @@ export default function AdminLogin() {
               {error && (
                 <Alert variant="destructive" className="mt-4">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
+                  <AlertTitle>Ошибка</AlertTitle>
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <Button className="w-full mt-4" type="submit">
-                <Lock className="mr-2 h-4 w-4" /> Log In
+              <Button className="w-full mt-4" type="submit" disabled={isLoading}>
+                {isLoading ? <Loader2 className="animate-spin" /> : <> <Lock className="mr-2 h-4 w-4" /> Войти</>}
               </Button>
             </form>
           </CardContent>
@@ -97,9 +103,9 @@ export default function AdminLogin() {
         </Card>
       </main>
       <footer className="w-full py-6 bg-gray-100">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <p className="text-sm text-center text-gray-500">
-            © 2023 MedLux Clinic. All rights reserved.
+            © 2023 MedLux Clinic. Все права защишены.
           </p>
         </div>
       </footer>

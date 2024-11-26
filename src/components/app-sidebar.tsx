@@ -12,8 +12,10 @@ import {
 import { BriefcaseMedical, Home, Newspaper, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function AppSidebar() {
+  const [tab, setTab] = useState("doctors")
   const router = useRouter();
   const items = [
     {
@@ -37,13 +39,16 @@ export function AppSidebar() {
     <Sidebar className={"mt-16"}>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Выберите раздел</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Button onClick={() => router.push("?tab=" + item.tab)}>
+                    <Button onClick={() => {
+                      setTab(item.tab)
+                      router.push("?tab=" + item.tab)
+                    }} variant={"link"} className={`p-3 h-12 flex items-center justify-start ${tab === item.tab && "bg-secondary"}`}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Button>

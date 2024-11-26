@@ -43,10 +43,7 @@ export default function Component() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button className="bg-blue-600 text-white hover:bg-blue-700">
-                  Записаться на прием
-                </Button>
-                <Button variant="outline">Узнать больше</Button>
+                <Button variant="outline" asChild><Link href={"/about-us"}>Узнать больше</Link></Button>
               </div>
             </div>
           </div>
@@ -293,7 +290,9 @@ export default function Component() {
               </Card>
             </div>
             <div className="mt-12 text-center">
-              <Button variant="outline">Посмотреть все новости</Button>
+
+              <Button variant="outline" asChild><Link href={"/news"}>Посмотреть все новости</Link></Button>
+
             </div>
           </div>
         </section>

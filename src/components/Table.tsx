@@ -54,38 +54,6 @@ function TableHeaderData(props: { type: "doctors" | "news" | "services" }) {
   }
 }
 
-function TableRowsData(props: {
-  data: any;
-  type: "doctors" | "services" | "news";
-}) {
-  const { data, type } = props;
-  if (type === "news") {
-    return (
-      <>
-        <TableCell>{data.title}</TableCell>
-        <TableCell>{data.content}</TableCell>
-      </>
-    );
-  }
-
-  if (type === "services") {
-    return (
-      <>
-        <TableCell>{data.name}</TableCell>
-        <TableCell>{data.description}</TableCell>
-      </>
-    );
-  }
-
-  if (type === "doctors") {
-    return (
-      <>
-        <TableCell>{data.name}</TableCell>
-        <TableCell>{data.specialty}</TableCell>
-      </>
-    );
-  }
-}
 
 export default function DashboardTable(props: { data: any; type: string }) {
   const [data, setData] = useState();
@@ -97,7 +65,8 @@ export default function DashboardTable(props: { data: any; type: string }) {
   const [newRecord, setNewRecord] = useState({ name: "", specialty: "" });
 
   useEffect(() => {
-    console.log("=>(Table.tsx:298) data-2", props);
+    setData(props.data)
+    setFilteredData(props.data)
   }, []);
 
   useEffect(() => {
@@ -199,17 +168,20 @@ export default function DashboardTable(props: { data: any; type: string }) {
         </div>
         <Table>
           <TableHeader>
-            <TableRow>
+            {data && <TableRow>
               <TableHead className="w-[100px]">№</TableHead>
               <TableHeaderData type={props.type} />
               <TableHead className="text-right">Действия</TableHead>
-            </TableRow>
+            </TableRow>}
           </TableHeader>
           <TableBody>
             {filteredData?.map((record, index) => (
               <TableRow key={record.id}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableRowsData type={props.type} data={record} />
+                {props.type === "news" ? <> <TableCell>{record.title}</TableCell>
+                  <TableCell>{record.content}</TableCell></> : props.type === "doctors" ? <><TableCell>{record.name}</TableCell>
+                    <TableCell>{record.specialty}</TableCell></> : <><TableCell>{record.name}</TableCell>
+                  <TableCell>{record.description}</TableCell></>}
                 <TableCell className="text-right">
                   <Dialog
                     open={isEditModalOpen}

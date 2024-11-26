@@ -18,6 +18,18 @@ import { MessageCircle, Star, Video } from "lucide-react";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 export default function DoctorsPage() {
   return (
@@ -473,10 +485,23 @@ export default function DoctorsPage() {
                   <li>Доступ к специалистам</li>
                   <li>Безопасные и конфиденциальные консультации</li>
                 </ul>
-                <Button className="w-full sm:w-auto">
-                  <Video className="mr-2 h-4 w-4" /> Запланировать виртуальный
-                  визит
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger><Button className="w-full sm:w-auto">
+                    <Video className="mr-2 h-4 w-4" /> Запланировать виртуальный
+                    визит
+                  </Button></AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Ошибка!</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        К сожалению в данны моменты мы не можем предоставить данную услугу.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Ок</AlertDialogCancel>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
               <div className="relative h-[500px] sm:h-[400px] rounded-lg overflow-hidden">
                 <Image
@@ -490,20 +515,6 @@ export default function DoctorsPage() {
             </div>
           </div>
         </section>
-
-        <Button
-          className="fixed bottom-4 right-4 bg-blue-600 text-white hover:bg-blue-700"
-          size="lg"
-        >
-          Book an Appointment
-        </Button>
-        <Button
-          className="fixed bottom-4 left-4 bg-green-600 text-white hover:bg-green-700"
-          size="icon"
-        >
-          <MessageCircle className="h-4 w-4" />
-          <span className="sr-only">Quick Chat</span>
-        </Button>
       </main>
       <Footer />
     </div>

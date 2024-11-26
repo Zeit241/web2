@@ -4,7 +4,6 @@ import CredentialProvider from "next-auth/providers/credentials";
 import { UserSession } from "@/types/custom-types";
 
 export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma),
   providers: [
     CredentialProvider({
       id: "credentials",
@@ -18,21 +17,19 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
         const { username, password } = credentials;
-        // const user = await SignIn({ username });
-        const user = {
-          id: 1,
-          role: "user",
-          username: "username",
-          password: "password",
-        };
-        if (!user) return null;
+        const users = [
+          { id: 1, username: "user", password: "pass" },
+          { id: 2, username: "user2", password: "pass2" }
+        ]
+        const user = users.filter(e => e.username === username && e.password === password)
+        console.log(user)
+        if (!user[0]) return null;
 
-        const isPassportValid = await bcrypt.compare(password, user.password!);
-        if (!isPassportValid) return null;
+        // const isPassportValid = await bcrypt.compare(password, user.password!);
+        // if (!isPassportValid) return null;
         return {
-          id: user.id,
-          username: user.username,
-          role: user.role,
+          id: user[0].id,
+          username: user[0].username,
         };
       },
     }),
