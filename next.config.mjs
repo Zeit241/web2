@@ -7,7 +7,9 @@ const nextConfig = {
         ignoreDuringBuilds: true
     },
     output: 'standalone',
-    missingSuspenseWithCSRBailout: false,
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
 };
 
 export default nextConfig;
