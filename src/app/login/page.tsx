@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,13 @@ import { Lock, AlertCircle, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react"
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | Вход',
+}
+
+
 export default function AdminLogin() {
   const router = useRouter();
   const [username, setUsername] = useState("");

@@ -1,5 +1,12 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | Условия использования',
+  description: `Клиника MedLux предоставляет исключительные медицинские услуги с 2005 года. Наша миссия – обеспечивать персонализированную и
+  качественную медицинскую помощь для улучшения здоровья и  благополучия нашего сообщества.`,
+}
 
 export default function TermsOfService() {
   return (

@@ -5,11 +5,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Award, Clock, MapPin, Phone, Users, SquareActivity, Ambulance } from "lucide-react";
+import { Award, Clock, Users, SquareActivity, Ambulance } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | О нас',
+}
 
 export default function AboutUs() {
   return (

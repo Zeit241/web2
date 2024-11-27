@@ -26,6 +26,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
 import { hello } from "./action";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux - лучшая медклиника',
+  description: `Клиника MedLux предоставляет исключительные медицинские услуги с 2005 года. Наша миссия – обеспечивать персонализированную и
+  качественную медицинскую помощь для улучшения здоровья и  благополучия нашего сообщества.`,
+}
 
 export default function Component() {
   return (

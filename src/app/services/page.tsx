@@ -10,16 +10,13 @@ import {
 } from "@/components/ui/card";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Heart,
   Brain,
@@ -27,7 +24,6 @@ import {
   Baby,
   Eye,
   Bone,
-  MessageCircle,
   Microscope,
   ShieldCheck,
   Scissors,
@@ -39,10 +35,17 @@ import {
   UserPlus,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | Услуги',
+  description: `Клиника MedLux предоставляет исключительные медицинские услуги с 2005 года. Наша миссия – обеспечивать персонализированную и
+  качественную медицинскую помощь для улучшения здоровья и  благополучия нашего сообщества.`,
+}
 
 export default function ServicesPage() {
   const [expandedService, setExpandedService] = useState<string | null>(null);

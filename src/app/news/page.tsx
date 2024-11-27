@@ -18,11 +18,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Calendar, MessageCircle, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | Новости',
+}
+
 
 export default function NewsPage() {
   const newsArticles = [

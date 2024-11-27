@@ -1,5 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | Политика конфиденциальности',
+}
+
 
 export default function PrivacyPolicy() {
   return (

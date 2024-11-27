@@ -18,10 +18,15 @@ import Link from "next/link";
 import { Activity } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-
 import { useRouter, useSearchParams } from "next/navigation";
 import DashboardTable from "@/components/Table";
 import { signOut } from "next-auth/react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Medlux | Панель администратора',
+}
+
 
 type TabType = "doctors" | "services" | "news";
 
