@@ -25,6 +25,8 @@ import DoctorCard from "@/components/DoctorCard";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
+import { hello } from "./action";
+
 export default function Component() {
   return (
     <div className="flex flex-col min-h-screen bg-white mx-auto">
@@ -57,6 +59,7 @@ export default function Component() {
                 width={600}
                 height={600}
                 className="mx-auto overflow-hidden rounded-xl object-cover object-center sm:w-full max-[1023px]:hidden"
+                onClick={() => hello()}
               />
               <div className="flex flex-col justify-center space-y-4 ">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
