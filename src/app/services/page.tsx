@@ -27,6 +27,7 @@ import {
   Microscope,
   ShieldCheck,
   Scissors,
+  Loader2,
   Activity,
   Zap,
   Pill,
@@ -35,20 +36,45 @@ import {
   UserPlus,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton"
 
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: 'Medlux | Услуги',
-  description: `Клиника MedLux предоставляет исключительные медицинские услуги с 2005 года. Наша миссия – обеспечивать персонализированную и
-  качественную медицинскую помощь для улучшения здоровья и  благополучия нашего сообщества.`,
-}
+// export const metadata: Metadata = {
+//   title: 'Medlux | Услуги',
+//   description: `Клиника MedLux предоставляет исключительные медицинские услуги с 2005 года. Наша миссия – обеспечивать персонализированную и
+//   качественную медицинскую помощь для улучшения здоровья и  благополучия нашего сообщества.`,
+// }
 
 export default function ServicesPage() {
   const [expandedService, setExpandedService] = useState<string | null>(null);
+
+
+  const [servicesList, setServicesList] = useState<undefined | any[]>();
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then(e => e.json())
+      .then((e) => {
+        console.log(e)
+        if (e.services) {
+          setServicesList(e.services)
+        }
+      })
+
+  }, [])
+
 
   const toggleService = (service: string) => {
     setExpandedService(expandedService === service ? null : service);
@@ -258,7 +284,36 @@ export default function ServicesPage() {
             </div>
           </div>
         </section>
-
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">Список услуг</h2>
+            <Card>
+              <CardContent className="p-0">
+                {
+                  servicesList ? <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[300px]">Название услуги</TableHead>
+                      <TableHead>Описание</TableHead>
+                      <TableHead className="text-right">Цена</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {servicesList ? servicesList?.map((service, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">{service.name}</TableCell>
+                        <TableCell>{service.description}</TableCell>
+                        <TableCell className="text-right">{service.price}</TableCell>
+                      </TableRow>
+                    )) : <Loader2 className={"animate-spin"} />}
+                  </TableBody>
+                </Table> :<Skeleton className="w-full h-[300px] rounded-2xl" />
+                }
+                
+              </CardContent>
+            </Card>
+          </div>
+        </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-50">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
@@ -271,7 +326,7 @@ export default function ServicesPage() {
               </p>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <AlertDialog>
-                  <AlertDialogTrigger>
+                  <AlertDialogTrigger asChild>
                     <Button className="bg-blue-600 text-white hover:bg-blue-700">
                       Записаться на прием
                     </Button>
@@ -288,7 +343,7 @@ export default function ServicesPage() {
                   </AlertDialogContent>
                 </AlertDialog>
                 <AlertDialog>
-                  <AlertDialogTrigger>
+                  <AlertDialogTrigger asChild>
                     <Button variant="outline">Связаться с нами</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>

@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 import { UserSession } from "@/types/custom-types";
+import conn from "./db";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,20 +18,26 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
         const { username, password } = credentials;
-        const users = [
-          { id: 1, username: "user", password: "pass" },
-          { id: 2, username: "user2", password: "pass2" }
-        ]
-        const user = users.filter(e => e.username === username && e.password === password)
-        console.log(user)
-        if (!user[0]) return null;
+        const query = 'SELECT id, username, password_hash FROM users WHERE username = $1';
+        const result = await conn.query(query, [username]);
 
-        // const isPassportValid = await bcrypt.compare(password, user.password!);
-        // if (!isPassportValid) return null;
+        if (result.rows.length === 0) {
+          return null;
+        }
+
+        const user = result.rows[0];
+        console.log(user)
+        const isPasswordMatch = await bcrypt.compare(password, user.password_hash);
+        console.log(await bcrypt.hash(password, 10))
+        if (!isPasswordMatch) {
+          return null;
+        }
         return {
-          id: user[0].id,
-          username: user[0].username,
+          id: user.id,
+          username: user.username,
         };
+
+
       },
     }),
   ],

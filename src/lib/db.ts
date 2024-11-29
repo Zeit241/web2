@@ -1,7 +1,5 @@
 import { Pool } from "pg";
 
-
-
 const conn = new Pool({
     user: process.env.PGSQL_USER,
     password: process.env.PGSQL_PASSWORD,
@@ -10,6 +8,5 @@ const conn = new Pool({
     database: process.env.PGSQL_DATABASE,
     ssl: false
 });
-
 
 export default conn;

@@ -17,11 +17,6 @@ import { Lock, AlertCircle, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react"
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: 'Medlux | Вход',
-}
 
 
 export default function AdminLogin() {
