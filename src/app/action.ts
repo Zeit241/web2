@@ -8,8 +8,7 @@ export async function hello() {
         const result = await conn.query('SELECT NOW() AS current_time;'); // Example query
         console.log('Current Time:', result.rows[0].current_time);
     } catch (err) {
-        console.error('Error executing query', err.stack);
+        console.error('Error executing query', err);
     } finally {
-        await conn.end(); // Close the pool when done
     }
 }

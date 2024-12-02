@@ -22,104 +22,116 @@ import { useRouter, useSearchParams } from "next/navigation";
 import DashboardTable from "@/components/Table";
 import { signOut } from "next-auth/react";
 
+type TabType = "doctors" | "services" | "news" | "specializations" | "categories";
 
-type TabType = "doctors" | "services" | "news";
-
-type DoctorsDataType = {
+interface Doctor {
   id: number;
   name: string;
-  specialty: string;
-};
-
-type ServicesDataType = {
-  id: number;
-  name: string;
+  experience: number;
+  phone: string;
+  email: string;
+  photo: string;
+  position: 'Доктор' | 'Главный врач' | 'Генеральный директор';
   description: string;
-};
+  specializations: string[];
+}
 
-type NewsDataType = {
+interface Service {
+  id: number;
+  service_name: string;
+  service_description: string;
+  price: number;
+  category_name: string;
+  created_at: string;
+}
+
+interface News {
   id: number;
   title: string;
   content: string;
-};
+  published_at: string;
+}
 
-type Data =
-  | ({ type: "doctors" } & DoctorsDataType)
-  | ({ type: "services" } & ServicesDataType)
-  | ({ type: "news" } & NewsDataType);
+interface Specialization {
+  id: number;
+  name: string;
+  description: string;
+}
+
+interface ServiceCategory {
+  id: number;
+  name: string;
+  description: string;
+}
 
 const TabNames = {
   doctors: "Доктора",
+  specializations: "Специализации",
   services: "Услуги",
+  categories: "Категории услуг",
   news: "Новости",
 };
+
 export default function Page() {
-  const mockDoctors: DoctorsDataType[] = [
-    { id: 1, name: "Dr. Sarah Johnson", specialty: "Cardiology" },
-    { id: 2, name: "Dr. Michael Lee", specialty: "Pediatrics" },
-    { id: 3, name: "Dr. Emily Chen", specialty: "Dermatology" },
-  ];
-
-  const mockServices = [
-    {
-      id: 1,
-      name: "Cardiology Services",
-      description: "Heart health and treatments",
-    },
-    {
-      id: 2,
-      name: "Pediatric Care",
-      description: "Specialized care for children",
-    },
-    { id: 3, name: "Dermatology", description: "Skin health and treatments" },
-  ];
-
-  const mockNews = [
-    {
-      id: 1,
-      title: "New MRI Machine",
-      content: "MedLux Clinic acquires state-of-the-art MRI technology",
-    },
-    {
-      id: 2,
-      title: "COVID-19 Vaccination Drive",
-      content: "Join our vaccination program this weekend",
-    },
-    {
-      id: 3,
-      title: "Dr. Johnson's Research Published",
-      content: "Groundbreaking cardiac study in medical journal",
-    },
-  ];
   const [activeTab, setActiveTab] = useState<TabType | null>(null);
-  const [data, setData] =
-    useState<(DoctorsDataType | ServicesDataType | NewsDataType)[]>();
+  const [data, setData] = useState<(Doctor | Service | News | Specialization | ServiceCategory)[]>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (tab !== "doctors" && tab !== "services" && tab !== "news") {
+    if (!TabNames[tab as TabType]) {
       router.push("?tab=doctors");
     } else {
-      setActiveTab(tab);
+      setActiveTab(tab as TabType);
     }
   }, [searchParams]);
 
   useEffect(() => {
-    if (activeTab === "doctors") {
-      setData(mockDoctors);
-    } else if (activeTab === "services") {
-      setData(mockServices);
-    } else if (activeTab === "news") {
-      setData(mockNews);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        let response;
+        
+        if (activeTab === "doctors") {
+          response = await fetch('/api/doctors');
+          const data = await response.json();
+          setData(data.doctors);
+        } 
+        else if (activeTab === "services") {
+          response = await fetch('/api/services');
+          const data = await response.json();
+          setData(data.services);
+        }
+        else if (activeTab === "news") {
+          response = await fetch('/api/news');
+          const data = await response.json();
+          setData(data.news);
+        }
+        else if (activeTab === "specializations") {
+          response = await fetch('/api/specializations');
+          const data = await response.json();
+          setData(data.specializations);
+        }
+        else if (activeTab === "categories") {
+          response = await fetch('/api/categories');
+          const data = await response.json();
+          setData(data.categories);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (activeTab) {
+      fetchData();
     }
   }, [activeTab]);
 
-  useEffect(() => {
-    console.log("=>(page.tsx:88) data", data);
-  }, [data]);
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -159,10 +171,10 @@ export default function Page() {
               </Breadcrumb>
             </div>
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0 max-h-screen overflow-hidden">
+          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
             <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
               {activeTab && data && (
-                <DashboardTable type={activeTab!} data={data} />
+                <DashboardTable type={activeTab} data={data} />
               )}
             </div>
           </div>

@@ -11,6 +11,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { Metadata } from "next";
+import Leadership from "@/components/Leadership";
 
 export const metadata: Metadata = {
   title: 'Medlux | О нас',
@@ -159,72 +160,7 @@ export default function AboutUs() {
             </div>
           </div>
         </section>
-        <section
-          id="team"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gray-50"
-        >
-          <div className="container mx-auto px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
-              Наша Команда
-            </h2>
-            <div className="flex gap-6 flex-row flex-wrap justify-center">
-              <Card className={"w-2/5"}>
-                <CardHeader>
-                  <Image
-                    alt="Доктор Эмили Чен"
-                    className="mx-auto rounded-full"
-                    height="150"
-                    src="/images/vecteezy_a-young-doctor-woman-wears-a-lab-coat-and-stethoscope-in_7483472.jpg"
-                    style={{
-                      aspectRatio: "150/150",
-                      objectFit: "cover",
-                    }}
-                    width="150"
-                  />
-                  <CardTitle className="text-center mt-4">
-                    Доктор Светлана Иванченко
-                  </CardTitle>
-                  <CardDescription className="text-center">
-                    Главный Врач
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500 text-center">
-                    Более 20 лет опыта в медицине и преданность пациентам делают
-                    Светлану выдающимся специалистом.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className={"w-2/5"}>
-                <CardHeader>
-                  <Image
-                    alt="Майкл Томпсон"
-                    className="mx-auto rounded-full"
-                    height="150"
-                    src="/images/vecteezy_portrait-of-girl-doctor-illustration_23570077.jpg"
-                    style={{
-                      aspectRatio: "150/150",
-                      objectFit: "cover",
-                    }}
-                    width="150"
-                  />
-                  <CardTitle className="text-center mt-4">
-                    Ирина Путина
-                  </CardTitle>
-                  <CardDescription className="text-center">
-                    Генеральный Директор
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500 text-center">
-                    Опыт в управлении здравоохранением помогает Ирине
-                    направлять стратегическое развитие клиники.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+        <Leadership />
       </main>
       <Footer />
     </div>

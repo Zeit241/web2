@@ -18,9 +18,10 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
         const { username, password } = credentials;
+        console.log(username, password)
         const query = 'SELECT id, username, password_hash FROM users WHERE username = $1';
         const result = await conn.query(query, [username]);
-
+       
         if (result.rows.length === 0) {
           return null;
         }
@@ -36,8 +37,6 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           username: user.username,
         };
-
-
       },
     }),
   ],

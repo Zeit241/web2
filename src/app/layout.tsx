@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Roboto } from 'next/font/google'
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: 'Medlux - лучшая медклиника',
@@ -24,6 +25,7 @@ export default function RootLayout({
         className={unbounded.className}
       >
         {children}
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

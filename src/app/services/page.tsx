@@ -48,6 +48,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton"
+import ServicesTable from "@/components/ServicesTable";
 
 // import type { Metadata } from "next";
 
@@ -287,31 +288,7 @@ export default function ServicesPage() {
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">Список услуг</h2>
-            <Card>
-              <CardContent className="p-0">
-                {
-                  servicesList ? <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[300px]">Название услуги</TableHead>
-                      <TableHead>Описание</TableHead>
-                      <TableHead className="text-right">Цена</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {servicesList ? servicesList?.map((service, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">{service.name}</TableCell>
-                        <TableCell>{service.description}</TableCell>
-                        <TableCell className="text-right">{service.price}</TableCell>
-                      </TableRow>
-                    )) : <Loader2 className={"animate-spin"} />}
-                  </TableBody>
-                </Table> :<Skeleton className="w-full h-[300px] rounded-2xl" />
-                }
-                
-              </CardContent>
-            </Card>
+            <ServicesTable/>
           </div>
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-50">

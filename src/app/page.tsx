@@ -26,6 +26,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
 import { hello } from "./action";
+import LatestNews from "@/components/LatestNews";
 
 
 export default function Component() {
@@ -125,6 +126,11 @@ export default function Component() {
             <div className={"mx-auto w-full"}>
               <DoctorCard />
             </div>
+            <div className={"w-full flex items-center justify-center py-6"}>
+              <Button className={"mx-auto"} variant={"outline"} asChild>
+                <Link href={"/doctors"}>Подробнее...</Link>
+              </Button>
+            </div>
           </div>
         </section>
         <section id="services" className="w-full py-12 md:py-24 lg:py-32">
@@ -201,106 +207,7 @@ export default function Component() {
             </div>
           </div>
         </section>
-        <section
-          id="news"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gray-50"
-        >
-          <div className="px-4 container mx-auto md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">
-              Последние Новости
-            </h2>
-            <div className="grid gap-6 w-full mx-auto lg:grid-cols-3">
-              <Card>
-                <CardHeader>
-                  <Image
-                    src="/placeholder.svg?height=200&width=400"
-                    alt="Изображение новости 1"
-                    width={400}
-                    height={200}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                  <CardTitle className="mt-4">
-                    Установка нового современного аппарата МРТ
-                  </CardTitle>
-                  <CardDescription>15 июня 2023</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">
-                    Клиника MedLux недавно установила современный аппарат МРТ,
-                    что значительно улучшит наши диагностические возможности...
-                  </p>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-blue-600 hover:underline mt-4"
-                  >
-                    Читать далее <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <Image
-                    src="/placeholder.svg?height=200&width=400"
-                    alt="Изображение новости 2"
-                    width={400}
-                    height={200}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                  <CardTitle className="mt-4">
-                    Доктор Джонсон получила престижную награду
-                  </CardTitle>
-                  <CardDescription>28 мая 2023</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">
-                    Наша замечательная доктор Сара Джонсон была отмечена за её
-                    выдающийся вклад в кардиологию...
-                  </p>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-blue-600 hover:underline mt-4"
-                  >
-                    Читать далее <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <Image
-                    src="/placeholder.svg?height=200&width=400"
-                    alt="Изображение новости 3"
-                    width={400}
-                    height={200}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                  <CardTitle className="mt-4">
-                    MedLux запускает телемедицинские услуги
-                  </CardTitle>
-                  <CardDescription>10 мая 2023</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">
-                    Мы рады сообщить о запуске наших новых телемедицинских
-                    услуг, предоставляющих медицинскую помощь прямо у вас
-                    дома...
-                  </p>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-blue-600 hover:underline mt-4"
-                  >
-                    Читать далее <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="mt-12 text-center">
-
-              <Button variant="outline" asChild><Link href={"/news"}>Посмотреть все новости</Link></Button>
-
-            </div>
-          </div>
-        </section>
-
+        <LatestNews />
         <section
           id="contact"
           className="w-full py-12 md:py-24 lg:py-32 bg-gray-100"

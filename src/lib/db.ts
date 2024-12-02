@@ -6,7 +6,7 @@ const conn = new Pool({
     host: process.env.PGSQL_HOST,
     port: Number(process.env.PGSQL_PORT),
     database: process.env.PGSQL_DATABASE,
-    ssl: false
+    ssl: false,
 });
 
 export default conn;

@@ -2,12 +2,9 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
   AccordionContent,
@@ -29,7 +26,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import type { Metadata } from "next";
-
+import Doctors from "./doctors";
+import { Suspense } from "react";
 export const metadata: Metadata = {
   title: 'Medlux | Доктора',
 }
@@ -54,312 +52,82 @@ export default function DoctorsPage() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container mx-auto px-4 md:px-6">
-            <Tabs defaultValue="all" className="w-full">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                <TabsList>
-                  <TabsTrigger value="all">Все врачи</TabsTrigger>
-                  <TabsTrigger value="cardiology">Кардиология</TabsTrigger>
-                  <TabsTrigger value="pediatrics">Педиатрия</TabsTrigger>
-                  <TabsTrigger value="dermatology">Дерматология</TabsTrigger>
-                </TabsList>
-                <div className="flex gap-4">
-                  <Input placeholder="Поиск врача..." className="w-[200px]" />
-                </div>
-              </div>
-              <TabsContent value="all" className="space-y-8">
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader>
-                      <Image
-                        alt="Доктор Сара Джонсон"
-                        className="mx-auto rounded-full"
-                        height="150"
-                        src="/placeholder.svg?height=150&width=150"
-                        style={{
-                          aspectRatio: "150/150",
-                          objectFit: "cover",
-                        }}
-                        width="150"
-                      />
-                      <CardTitle className="text-center mt-4">
-                        Доктор Сара Джонсон
-                      </CardTitle>
-                      <CardDescription className="text-center">
-                        Кардиолог
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-sm text-gray-500 mb-4">
-                        Доктор Джонсон — сертифицированный кардиолог с более чем
-                        15-летним опытом лечения сердечно-сосудистых
-                        заболеваний.
-                      </p>
-                      <div className="flex justify-center items-center gap-1 mb-4">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm text-gray-500 ml-2">
-                          (124 отзыва)
-                        </span>
-                      </div>
-                      <Button className="w-full">Записаться на прием</Button>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader>
-                      <Image
-                        alt="Доктор Майкл Ли"
-                        className="mx-auto rounded-full"
-                        height="150"
-                        src="/placeholder.svg?height=150&width=150"
-                        style={{
-                          aspectRatio: "150/150",
-                          objectFit: "cover",
-                        }}
-                        width="150"
-                      />
-                      <CardTitle className="text-center mt-4">
-                        Доктор Майкл Ли
-                      </CardTitle>
-                      <CardDescription className="text-center">
-                        Педиатр
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-sm text-gray-500 mb-4">
-                        Доктор Ли специализируется на детской медицине и с
-                        большим энтузиазмом заботится о здоровье детей.
-                      </p>
-                      <div className="flex justify-center items-center gap-1 mb-4">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 text-gray-300" />
-                        <span className="text-sm text-gray-500 ml-2">
-                          (98 отзывов)
-                        </span>
-                      </div>
-                      <Button className="w-full">Записаться на прием</Button>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader>
-                      <Image
-                        alt="Доктор Эмили Чен"
-                        className="mx-auto rounded-full"
-                        height="150"
-                        src="/placeholder.svg?height=150&width=150"
-                        style={{
-                          aspectRatio: "150/150",
-                          objectFit: "cover",
-                        }}
-                        width="150"
-                      />
-                      <CardTitle className="text-center mt-4">
-                        Доктор Эмили Чен
-                      </CardTitle>
-                      <CardDescription className="text-center">
-                        Дерматолог
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-sm text-gray-500 mb-4">
-                        Доктор Чен является экспертом в области здоровья кожи и
-                        предлагает широкий спектр дерматологических услуг.
-                      </p>
-                      <div className="flex justify-center items-center gap-1 mb-4">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm text-gray-500 ml-2">
-                          (156 отзывов)
-                        </span>
-                      </div>
-                      <Button className="w-full">Записаться на прием</Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              <TabsContent value="cardiology" className="space-y-8">
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader>
-                      <Image
-                        alt="Доктор Алексей Иванов"
-                        className="mx-auto rounded-full"
-                        height="150"
-                        src="/placeholder.svg?height=150&width=150"
-                        style={{
-                          aspectRatio: "150/150",
-                          objectFit: "cover",
-                        }}
-                        width="150"
-                      />
-                      <CardTitle className="text-center mt-4">
-                        Доктор Алексей Иванов
-                      </CardTitle>
-                      <CardDescription className="text-center">
-                        Кардиолог
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-sm text-gray-500 mb-4">
-                        Доктор Иванов специализируется на диагностике и лечении
-                        сложных сердечно-сосудистых заболеваний.
-                      </p>
-                      <div className="flex justify-center items-center gap-1 mb-4">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 text-gray-300" />
-                        <span className="text-sm text-gray-500 ml-2">
-                          (87 отзывов)
-                        </span>
-                      </div>
-                      <Button className="w-full">Записаться на прием</Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              <TabsContent value="pediatrics" className="space-y-8">
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader>
-                      <Image
-                        alt="Доктор Анна Смирнова"
-                        className="mx-auto rounded-full"
-                        height="150"
-                        src="/placeholder.svg?height=150&width=150"
-                        style={{
-                          aspectRatio: "150/150",
-                          objectFit: "cover",
-                        }}
-                        width="150"
-                      />
-                      <CardTitle className="text-center mt-4">
-                        Доктор Анна Смирнова
-                      </CardTitle>
-                      <CardDescription className="text-center">
-                        Педиатр
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-sm text-gray-500 mb-4">
-                        Доктор Смирнова известна своим вниманием к мелочам и
-                        искренним отношением к маленьким пациентам.
-                      </p>
-                      <div className="flex justify-center items-center gap-1 mb-4">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 text-gray-300" />
-                        <Star className="w-4 h-4 text-gray-300" />
-                        <span className="text-sm text-gray-500 ml-2">
-                          (64 отзыва)
-                        </span>
-                      </div>
-                      <Button className="w-full">Записаться на прием</Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              <TabsContent value="dermatology" className="space-y-8">
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader>
-                      <Image
-                        alt="Доктор Ольга Петрова"
-                        className="mx-auto rounded-full aspect-square"
-                        height="150"
-                        src="/images/female-doctor-hospital-with-stethoscope.jpg"
-                        style={{
-                          // aspectRatio: "150/150",
-                          objectFit: "cover",
-                        }}
-                        width="150"
-                      />
-                      <CardTitle className="text-center mt-4">
-                        Доктор Ольга Петрова
-                      </CardTitle>
-                      <CardDescription className="text-center">
-                        Дерматолог
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-sm text-gray-500 mb-4">
-                        Доктор Петрова предоставляет комплексные решения для
-                        всех типов кожных заболеваний и эстетических процедур.
-                      </p>
-                      <div className="flex justify-center items-center gap-1 mb-4">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm text-gray-500 ml-2">
-                          (110 отзывов)
-                        </span>
-                      </div>
-                      <Button className="w-full">Записаться на прием</Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </section>
+    
+        <Doctors/>
+   
+        
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
               Почему выбрать наших врачей?
             </h2>
-            <div className="grid gap-6 lg:grid-cols-3">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Профессионализм</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">
-                    Наши врачи являются сертифицированными экспертами в своих
-                    областях, что гарантирует вам получение медицинской помощи
-                    самого высокого качества.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Ориентированность на пациента</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">
-                    Мы приоритизируем ваши индивидуальные потребности и
-                    предпочтения, адаптируя наш подход для предоставления
-                    персонализированной помощи.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Передовые технологии</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-500">
-                    Наши врачи используют последние медицинские технологии и
-                    методы для достижения наилучших результатов.
-                  </p>
-                </CardContent>
-              </Card>
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col flex-wrap md:flex-row lg:flex-row gap-6 justify-center">
+                <Card className="lg:w-1/3 w-full">
+                  <CardHeader>
+                    <CardTitle>Многолетний опыт</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500">
+                      Наши специалисты имеют богатый опыт работы в медицине, что позволяет им 
+                      эффективно диагностировать и лечить даже самые сложные случаи.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="lg:w-1/3 w-full">
+                  <CardHeader>
+                    <CardTitle>Комплексный подход</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500">
+                      Мы рассматриваем здоровье пациента целостно, учитывая все аспекты 
+                      жизни и предлагая комплексные решения для улучшения самочувствия.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-3">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Профессионализм</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500">
+                      Наши врачи являются сертифицированными экспертами в своих
+                      областях, что гарантирует вам получение медицинской помощи
+                      самого высокого качества.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Ориентированность на пациента</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500">
+                      Мы приоритизируем ваши индивидуальные потребности и
+                      предпочтения, адаптируя наш подход для предоставления
+                      персонализированной помощи.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Передовые технологии</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500">
+                      Наши врачи используют последние медицинские технологии и
+                      методы для достижения наилучших результатов.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </section>
+         
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
@@ -372,12 +140,12 @@ export default function DoctorsPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 mb-4">
-                    "Профессионализм и сострадание доктора Джонсона значительно
-                    повлияли на мое выздоровление. Я не могу быть более
-                    благодарен за уход, который я получил в клинике MedLux."
+                    "Профессионализм и внимательность доктора Петрова значительно
+                    повлияли на мое выздоровление. Я очень благодарен за уход, 
+                    который получил в клинике MedLux."
                   </p>
                   <p className="text-sm font-semibold">
-                    - Джон Д., пациент с сердечными заболеваниями
+                    - Андрей К., пациент с сердечными заболеваниями
                   </p>
                 </CardContent>
               </Card>
@@ -387,11 +155,11 @@ export default function DoctorsPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 mb-4">
-                    "Доктор Ли прекрасно ладит с детьми. Его дружелюбное
-                    поведение успокоило моего сына, сделав наши визиты
-                    безстрессовыми и эффективными."
+                    "Доктор Соколова прекрасно ладит с детьми. Её дружелюбное
+                    поведение успокоило мою дочь, сделав наши визиты
+                    комфортными и эффективными."
                   </p>
-                  <p className="text-sm font-semibold">- Сара М., родитель</p>
+                  <p className="text-sm font-semibold">- Мария В., мама двоих детей</p>
                 </CardContent>
               </Card>
               <Card>
@@ -400,12 +168,57 @@ export default function DoctorsPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 mb-4">
-                    "Благодаря инновационным методам лечения доктора Чен, я
-                    вернула уверенность в своей коже. Ее профессионализм
-                    действительно изменил мою жизнь."
+                    "Благодаря современным методам лечения доктора Ивановой, я
+                    вернула уверенность в себе. Её профессионализм
+                    действительно изменил мою жизнь к лучшему."
                   </p>
                   <p className="text-sm font-semibold">
-                    - Эмили Р., пациент дерматологии
+                    - Елена С., пациент дерматолога
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Высокая квалификация</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500 mb-4">
+                    "Доктор Смирнов проявил исключительный профессионализм в лечении
+                    моего сложного случая. Его опыт и знания помогли мне полностью
+                    восстановиться после травмы."
+                  </p>
+                  <p className="text-sm font-semibold">
+                    - Дмитрий П., пациент травматолога
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Внимательное отношение</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500 mb-4">
+                    "Очень благодарна доктору Козловой за чуткое отношение и
+                    профессионализм. Она всегда находит время ответить на все
+                    вопросы и развеять сомнения."
+                  </p>
+                  <p className="text-sm font-semibold">
+                    - Наталья М., пациент эндокринолога
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Эффективное лечение</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500 mb-4">
+                    "Доктор Морозов назначил очень эффективное лечение, которое
+                    помогло мне быстро справиться с проблемой. Рекомендую этого
+                    специалиста всем своим знакомым."
+                  </p>
+                  <p className="text-sm font-semibold">
+                    - Сергей Л., пациент невролога
                   </p>
                 </CardContent>
               </Card>
@@ -490,7 +303,7 @@ export default function DoctorsPage() {
                   <li>Безопасные и конфиденциальные консультации</li>
                 </ul>
                 <AlertDialog>
-                  <AlertDialogTrigger><Button className="w-full sm:w-auto">
+                  <AlertDialogTrigger asChild><Button className="w-full sm:w-auto">
                     <Video className="mr-2 h-4 w-4" /> Запланировать виртуальный
                     визит
                   </Button></AlertDialogTrigger>

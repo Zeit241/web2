@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { BriefcaseMedical, Home, Newspaper, Stethoscope } from "lucide-react";
+import { BriefcaseMedical, Home, Newspaper, Stethoscope, GraduationCap, FolderTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,8 +20,13 @@ export function AppSidebar() {
   const items = [
     {
       title: "Доктора",
-      tab: "doctors",
+      tab: "doctors", 
       icon: Stethoscope,
+    },
+    {
+      title: "Специализации",
+      tab: "specializations",
+      icon: GraduationCap,
     },
     {
       title: "Услуги",
@@ -29,7 +34,12 @@ export function AppSidebar() {
       icon: BriefcaseMedical,
     },
     {
-      title: "Новости",
+      title: "Категории услуг",
+      tab: "categories",
+      icon: FolderTree,
+    },
+    {
+      title: "Новости", 
       tab: "news",
       icon: Newspaper,
     },
