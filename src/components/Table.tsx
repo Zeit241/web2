@@ -11,56 +11,15 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pencil, Search, Trash2, Plus, Loader2 } from "lucide-react";
+import { Pencil, Trash2, Plus, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import EditModal from "./EditModal";
 import { Skeleton } from "@/components/ui/skeleton";
-import { showToast } from "@/components/ui/toast";
+import { createSaveHandlers } from "@/lib/tableSaveHandlers";
+import { createDeleteHandlers } from "@/lib/tableDeleteHandlers";
+import { TableType } from "@/types/tables";
 
-// Определяем типы данных
-interface Doctor {
-  id: number;
-  name: string;
-  experience: number;
-  phone: string;
-  email: string;
-  photo: string;
-  position: 'Доктор' | 'Главный врач' | 'Генеральный директор';
-  description: string;
-  created_at: string;
-  specializations: string[];
-}
-
-interface Service {
-  id: number;
-  service_name: string;
-  service_description: string;
-  price: number;
-  category_name: string;
-  created_at: string;
-}
-
-interface News {
-  id: number;
-  title: string;
-  content: string;
-  image: string;
-  published_at: string;
-}
-
-interface Specialization {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface ServiceCategory {
-  id: number;
-  name: string;
-  description: string;
-}
-
-function TableHeaderData(props: { type: "doctors" | "news" | "services" | "specializations" | "categories" }) {
+function TableHeaderData(props: { type: TableType }) {
   if (props.type === "doctors") {
     return (
       <>
@@ -112,7 +71,7 @@ function TableHeaderData(props: { type: "doctors" | "news" | "services" | "speci
   }
 }
 
-function TableSkeleton({ type }: { type: string }) {
+function TableSkeleton({ type }: { type: TableType }) {
   const getColumnCount = () => {
     switch (type) {
       case "doctors": return 7; // №, Имя, Должность, Специализации, Опыт, Контакты, Действия
@@ -150,7 +109,7 @@ function TableSkeleton({ type }: { type: string }) {
   );
 }
 
-export default function DashboardTable(props: { data: any; type: string }) {
+export default function DashboardTable(props: { data: any; type: TableType }) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(props.data);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -167,32 +126,21 @@ export default function DashboardTable(props: { data: any; type: string }) {
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const openDeleteDialog = (id: number) => {
     setDeletingId(id);
     setIsDeleteDialogOpen(true);
   };
 
+  const { handleDelete: executeDelete } = createDeleteHandlers({
+    setData,
+    setFilteredData,
+    setIsDeleteDialogOpen,
+    setIsDeleting
+  });
+
   const confirmDelete = async () => {
-    setIsDeleting(true);
-    try {
-      const response = await fetch(`/api/${props.type}/${deletingId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error('Failed to delete');
-      }
-      setIsDeleteDialogOpen(false);
-      showToast.success('Запись успешно удалена');
-      // Удаляем запись из состояния
-      const newData = data.filter(item => item.id !== deletingId);
-      setData(newData);
-      setFilteredData(newData);
-      setIsDeleteDialogOpen(false);
-    } catch (error) {
-      showToast.error('Ошибка при удалении записи');
-      console.error('Error deleting:', error);
-    } finally {
-      setIsDeleting(false);
+    if (deletingId) {
+      await executeDelete(props.type, deletingId);
     }
   };
 
@@ -248,61 +196,14 @@ export default function DashboardTable(props: { data: any; type: string }) {
     setFilteredData(filtered);
   }, [searchQuery, data, props.type]);
 
-  const handleSave = async (updatedData: any) => {
-    try {
-      const formData = new FormData();
-      Object.keys(updatedData).forEach(key => {
-        if (key === 'photo' && updatedData[key] instanceof File) {
-          formData.append(key, updatedData[key]);
-        } else if (Array.isArray(updatedData[key])) {
-          updatedData[key].forEach((value: string) => {
-            formData.append(`${key}[]`, value);
-          });
-        } else {
-          formData.append(key, updatedData[key]?.toString() || '');
-        }
-      });
+  const { handleSave } = createSaveHandlers({
+    setData,
+    setFilteredData,
+    setIsEditModalOpen
+  });
 
-      const method = updatedData.id ? 'PUT' : 'POST';
-      const url = updatedData.id 
-        ? `/api/${props.type}/${updatedData.id}`
-        : `/api/${props.type}`;
-
-      const response = await fetch(url, {
-        method,
-        body: formData,
-      });
-
-      const result = await response.json();
-      
-      if (result.error) {
-        showToast.error(`Ошибка при ${updatedData.id ? 'обновлении' : 'создании'} записи`);
-        throw new Error(result.error);
-      }
-
-      showToast.success(`Запись успешно ${updatedData.id ? 'обновлена' : 'создана'}`);
-      
-      const resultItem = props.type === 'specializations' 
-        ? result.specialization 
-        : result.doctor;
-
-      if (updatedData.id) {
-        setData(prevData => prevData.map(item => 
-          item.id === resultItem.id ? resultItem : item
-        ));
-        setFilteredData(prevData => prevData.map(item => 
-          item.id === resultItem.id ? resultItem : item
-        ));
-      } else {
-        setData(prevData => [...prevData, resultItem]);
-        setFilteredData(prevData => [...prevData, resultItem]);
-      }
-      
-      setIsEditModalOpen(false);
-    } catch (error) {
-      showToast.error('Ошибка при создании/обновлении записи');
-      console.error('Error:', error);
-    }
+  const onSave = async (updatedData: any) => {
+    await handleSave(props.type, updatedData);
   };
 
   return (
@@ -375,7 +276,7 @@ export default function DashboardTable(props: { data: any; type: string }) {
                     <TableCell>{record.description}</TableCell>
                   </>
                 )}
-                <TableCell className="text-right pr-4">
+                <TableCell className="text-right pr-4 flex gap-0.5">
                   <Button variant="outline" size="sm" onClick={() => handleEdit(record)}>
                   <Pencil />
                   </Button>
@@ -383,7 +284,7 @@ export default function DashboardTable(props: { data: any; type: string }) {
                     variant="outline" 
                     size="sm" 
                     className="ml-2" 
-                    onClick={() => handleDelete(record.id)}
+                    onClick={() => openDeleteDialog(record.id)}
                   >
                     <Trash2 />
                   </Button>
@@ -397,7 +298,7 @@ export default function DashboardTable(props: { data: any; type: string }) {
       <EditModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onSave={handleSave}
+        onSave={onSave}
         type={props.type}
         data={editingItem}
       />
@@ -405,7 +306,7 @@ export default function DashboardTable(props: { data: any; type: string }) {
       <EditModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSave={handleSave}
+        onSave={onSave}
         type={props.type}
         data={null}
         isCreating={true}

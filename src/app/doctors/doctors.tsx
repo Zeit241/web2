@@ -80,19 +80,8 @@ const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   const [showDialog, setShowDialog] = useState(false);
 
   // Преобразование Buffer в base64
-  const getImageUrl = (photo: any) => {
-    if (!photo) return "/images/doctor_placeholder.webp";
-    
-    if (photo.type === 'Buffer' && Array.isArray(photo.data)) {
-      // Преобразуем массив байтов в строку base64
-      const bytes = new Uint8Array(photo.data);
-      const base64 = btoa(
-        bytes.reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-      return `data:image/jpeg;base64,${base64}`;
-    }
-    
-    return "/images/doctor_placeholder.webp";
+  const getImageUrl = (photo: any): string => {
+    return photo || "/images/doctor_placeholder.webp";
   };
 
   const imageUrl = getImageUrl(doctor.photo);

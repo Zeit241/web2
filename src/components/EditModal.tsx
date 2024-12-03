@@ -53,8 +53,9 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+
         setPhotoPreview(reader.result as string);
-        setFormData({ ...formData, photo: file });
+        setFormData({ ...formData, photo: reader.result });
       };
       reader.readAsDataURL(file);
     }
@@ -89,11 +90,9 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
     if (data) {
       setFormData({
         ...data,
-        phone: data.phone || '',
-        email: data.email || '',
-        description: data.description || ''
       });
-      setPhotoPreview(data.photo || null);
+      
+      setPhotoPreview(data.photo ? getImageUrl(data.photo) :  null);
       setSelectedSpecializations(data.specializations || []);
     }
   }, [data]);
@@ -102,7 +101,7 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
     if (!selectedSpecializations.includes(specializationName)) {
       const newSpecializations = [...selectedSpecializations, specializationName];
       setSelectedSpecializations(newSpecializations);
-      setFormData(prev => ({
+      setFormData((prev: Specialization) => ({
         ...prev,
         specializations: newSpecializations
       }));
@@ -114,7 +113,7 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
       spec => spec !== specializationName
     );
     setSelectedSpecializations(newSpecializations);
-    setFormData(prev => ({
+    setFormData((prev: Specialization) => ({
       ...prev,
       specializations: newSpecializations
     }));
@@ -123,39 +122,11 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name) {
-      console.error('Name is required');
-      return;
-    }
-    
     setIsSubmitting(true);
-    
-    try {
-      if (type === 'specializations') {
-        // Для специализаций отправляем JSON
-        await onSave({
-          id: formData.id,
-          name: formData.name
-        });
-      } else {
-        // Для остальных типов используем FormData
-        const submitData = new FormData();
-        
-        Object.keys(formData).forEach(key => {
-          if (key === 'photo' && formData[key] instanceof File) {
-            submitData.append(key, formData[key]);
-          } else if (Array.isArray(formData[key])) {
-            formData[key].forEach((value: string) => {
-              submitData.append(`${key}[]`, value);
-            });
-          } else {
-            submitData.append(key, formData[key]?.toString() || '');
-          }
-        });
 
-        await onSave(submitData);
-      }
-      onClose();
+    try {
+        onSave(formData);
+        onClose();
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -174,9 +145,26 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
     return titles[type] || type;
   };
 
+  // Преобразование Buffer в base64
+  const getImageUrl = (photo: any) => {
+    console.log("data.photo", data.photo);
+    if (!photo) return "/images/doctor_placeholder.webp";
+    console.log("photo", photo);
+    if (photo.type === 'Buffer' && Array.isArray(photo.data)) {
+      // Преобразуем массив байтов в строку base64
+      const bytes = new Uint8Array(photo.data);
+      const base64 = btoa(
+        bytes.reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      return `data:image/jpeg;base64,${base64}`;
+    }
+    
+    return "/images/doctor_placeholder.webp";
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto scrollbar-hide">
         <DialogHeader>
           <DialogTitle>
             {isCreating ? `Создать ${getTypeTitle(type)}` : `Редактировать ${getTypeTitle(type)}`}
@@ -220,7 +208,7 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
                           />
                         </div>
                         <p className="text-sm text-gray-500">
-                          Перетащите новое фото или кликните для выбора
+                          Перетащите новое фото или кликните для выбоа
                         </p>
                       </>
                     ) : (

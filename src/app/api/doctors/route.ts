@@ -55,6 +55,14 @@ export async function GET(request: Request) {
 
     const result = await conn.query(query, values);
 
+    result.rows.forEach((doctor: any) => {
+      if (doctor.photo) {
+        doctor.photo = `data:image/jpg;base64,${doctor.photo.toString(
+          "base64"
+        )}`;
+      }
+    });
+
     return NextResponse.json({ doctors: result.rows });
   } catch (error) {
     console.error("Error fetching doctors:", error);
@@ -67,15 +75,15 @@ export async function GET(request: Request) {
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
+    const body = await req.json();
 
-    const name = formData.get("name") as string;
-    const experience = parseInt(formData.get("experience") as string);
-    const phone = formData.get("phone") as string;
-    const email = formData.get("email") as string;
-    const description = formData.get("description") as string;
-    const photo = formData.get("photo") as File;
-    const specializations = formData.getAll("specializations[]") as string[];
+    const name = body.name as string;
+    const experience = parseInt(body.experience as string);
+    const phone = body.phone as string;
+    const email = body.email as string;
+    const description = body.description as string;
+    const photo = body.photo;
+    const specializations = body.specializations as string[];
 
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -103,8 +111,7 @@ export async function POST(req: Request) {
       }
 
       if (photo) {
-        const bytes = await photo.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        const buffer = Buffer.from(photo, "base64");
 
         await conn.query(`UPDATE doctors SET photo = $1 WHERE id = $2`, [
           buffer,

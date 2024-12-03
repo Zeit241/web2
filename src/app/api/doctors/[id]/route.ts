@@ -6,29 +6,27 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const formData = await request.formData();
     const id = parseInt(params.id);
-
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid doctor ID" }, { status: 400 });
     }
 
-    const name = formData.get("name");
+    const data = await request.json();
+    const {
+      name,
+      experience,
+      phone,
+      email,
+      photo,
+      description,
+      specializations,
+    } = data;
+
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
-    let photoBytes = null;
-    const photo = formData.get("photo");
-    const specializations = formData.getAll("specializations[]");
-    const experience = parseInt(formData.get("experience") as string) || 0;
-
-    console.log(specializations);
-
-    if (photo instanceof File) {
-      const bytes = await photo.arrayBuffer();
-      photoBytes = Buffer.from(bytes);
-    }
+    console.log("data", data);
 
     const result = await conn.query(
       `UPDATE doctors 
@@ -36,20 +34,29 @@ export async function PUT(
            experience = $2, 
            phone = $3, 
            email = $4, 
-           photo = COALESCE($5, photo),
-           description = $6
-       WHERE id = $7 
+           description = $5
+       WHERE id = $6 
        RETURNING *`,
       [
         name,
-        experience,
-        formData.get("phone") || null,
-        formData.get("email") || null,
-        photoBytes,
-        formData.get("description") || null,
+        experience || 0,
+        phone || null,
+        email || null,
+        description || null,
         id,
       ]
     );
+
+    if (photo) {
+      let buffer;
+
+      buffer = Buffer.from(photo, "base64");
+
+      await conn.query(`UPDATE doctors SET photo = $1 WHERE id = $2`, [
+        buffer,
+        id,
+      ]);
+    }
 
     await conn.query(
       `DELETE FROM doctor_specializations WHERE doctor_id = $1`,
@@ -58,9 +65,9 @@ export async function PUT(
 
     if (specializations.length > 0) {
       const specializationValues = specializations
-        .filter((e) => e !== "null")
+        .filter((e: string) => e !== "null")
         .map(
-          (_, index) =>
+          (_: any, index: number) =>
             `($1, (SELECT id FROM specializations WHERE name = $${index + 2}))`
         )
         .join(", ");
@@ -84,14 +91,7 @@ export async function PUT(
       [id]
     );
 
-    const doctor = updatedDoctor.rows[0];
-    if (doctor.photo) {
-      doctor.photo = `data:image/jpeg;base64,${doctor.photo.toString(
-        "base64"
-      )}`;
-    }
-
-    return NextResponse.json({ doctor });
+    return NextResponse.json({ doctor: updatedDoctor.rows[0] });
   } catch (error) {
     console.error("Error updating doctor:", error);
     return NextResponse.json(

@@ -33,3 +33,35 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const query = `
+   SELECT 
+    services.id,
+    services.name AS service_name,
+    services.price,
+    services.description as service_description,
+    service_categories.name AS category_name
+FROM 
+    services
+JOIN 
+    service_categories
+ON 
+    services.category_id = service_categories.id;
+
+    `;
+
+    const result = await conn.query(query);
+
+    return NextResponse.json({
+      services: result.rows,
+    });
+  } catch (error) {
+    console.error("Ошибка при получении услуг:", error);
+    return NextResponse.json(
+      { error: "Не удалось получить список услуг" },
+      { status: 500 }
+    );
+  }
+}
