@@ -40,12 +40,8 @@ export async function GET(request: Request) {
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-    let imageBytes = null;
-    const image = formData.get("image");
+    const body = await req.json();
+    const { title, content, image } = body;
 
     if (!title || !content) {
       return NextResponse.json(
@@ -54,16 +50,17 @@ export async function POST(req: Request) {
       );
     }
 
-    if (image instanceof File) {
-      const bytes = await image.arrayBuffer();
-      imageBytes = Buffer.from(bytes);
+    let imageBuffer = null;
+    if (image) {
+      const base64Data = image.split(",")[1];
+      imageBuffer = Buffer.from(base64Data, "base64");
     }
 
     const result = await conn.query(
       `INSERT INTO news (title, content, image, published_at)
        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
        RETURNING *`,
-      [title, content, imageBytes]
+      [title, content, imageBuffer]
     );
 
     const news = result.rows[0];

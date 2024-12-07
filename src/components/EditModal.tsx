@@ -24,6 +24,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -47,6 +48,14 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
       data?.specializations || []
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errors, setErrors] = useState<{
+      name?: string;
+      specializations?: string;
+      price?: string;
+      service_name?: string;
+      title?: string;
+      content?: string;
+    }>({});
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -92,7 +101,7 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
         ...data,
       });
       
-      setPhotoPreview(data.photo ? getImageUrl(data.photo) :  null);
+      setPhotoPreview(data.photo);
       setSelectedSpecializations(data.specializations || []);
     }
   }, [data]);
@@ -121,14 +130,54 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    setIsSubmitting(true);
+    setErrors({});
 
+    // Валидация
+    const newErrors: { name?: string; specializations?: string } = {};
+    
+
+    if (type === 'doctors') {
+      if (!formData.name?.trim()) {
+        newErrors.name = 'Имя врача обязательно';
+      }
+      
+      if (type === 'doctors' && (!selectedSpecializations || selectedSpecializations.length === 0)) {
+        newErrors.specializations = 'Выберите хотя бы одну специализацию';
+      }
+    }
+
+    if (type === 'services') {
+      if (!formData.service_name?.trim()) {
+        newErrors.service_name = 'Название услуги обязательно';
+      }
+      if (!formData.price) {
+        newErrors.price = 'Укажите цену услуги';
+      }
+    }
+
+    if (type === 'news') {
+      if (!formData.title?.trim()) {
+        newErrors.title = 'Заголовок новости обязателен';
+      }
+      if (!formData.content?.trim()) {
+        newErrors.content = 'Содержание новости обязательно';
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-        onSave(formData);
-        onClose();
+      await onSave({
+        ...formData,
+        specializations: selectedSpecializations,
+      });
+      onClose();
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error saving:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -145,22 +194,6 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
     return titles[type] || type;
   };
 
-  // Преобразование Buffer в base64
-  const getImageUrl = (photo: any) => {
-    console.log("data.photo", data.photo);
-    if (!photo) return "/images/doctor_placeholder.webp";
-    console.log("photo", photo);
-    if (photo.type === 'Buffer' && Array.isArray(photo.data)) {
-      // Преобразуем массив байтов в строку base64
-      const bytes = new Uint8Array(photo.data);
-      const base64 = btoa(
-        bytes.reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-      return `data:image/jpeg;base64,${base64}`;
-    }
-    
-    return "/images/doctor_placeholder.webp";
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -178,7 +211,11 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className={errors.name ? "border-red-500" : ""}
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <label>Опыт работы (лет)</label>
@@ -285,11 +322,14 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
                   onChange={(e) => setFormData({ ...formData, service_name: e.target.value })}
                 />
               </div>
+              {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
               <div className="space-y-2">
                 <label>Описание</label>
                 <Textarea
                   value={formData.service_description}
-                  onChange={(e) => setFormData({ ...formData, service_description: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
@@ -299,6 +339,9 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) })}
                 />
+                 {errors.price && (
+                  <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+                )}
               </div>
             </>
           )}
@@ -321,6 +364,56 @@ export default function EditModal({ isOpen, onClose, onSave, type, data, isCreat
                   />
                 </div>
               )}
+            </>
+          )}
+
+          {type === "news" && (
+            <>
+              <div className="space-y-2">
+                <label>Заголовок</label>
+                <Input
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <label>Содержание</label>
+                <Textarea
+                  value={formData.content}
+                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <label>Изображение</label>
+                <div
+                  {...getRootProps()}
+                  className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer
+                    ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
+                >
+                  <input {...getInputProps()} />
+                  <div className="flex flex-col items-center gap-4">
+                    {photoPreview ? (
+                      <>
+                        <div className="relative h-32 w-32">
+                          <Image
+                            src={photoPreview}
+                            alt="Preview"
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <p className="text-sm text-gray-500">
+                          Перетащите новое изображение или кликните для выбора
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        Перетащите изображение сюда или кликните для выбора
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </>
           )}
           <DialogFooter>

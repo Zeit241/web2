@@ -27,9 +27,8 @@ export async function GET() {
 // POST - создание новой специализации
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-
-    const name = formData.get("name") as string;
+    const body = await req.json();
+    const name = body.name;
 
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });

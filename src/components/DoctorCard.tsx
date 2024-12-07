@@ -38,7 +38,7 @@ export default function DoctorCard() {
       .then(res => res.json())
       .then(data => {
         if (data.doctors) {
-          setDoctors(data.doctors.slice(0, 7));
+          setDoctors(data?.doctors?.slice(0, 7));
           setIsLoading(false);
         }
       });
@@ -107,7 +107,7 @@ export default function DoctorCard() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 mt-3">
-                    {doctor.description.slice(0, 95)}...
+                    {doctor?.description?.slice(0, 95)}...
                   </p>
                 </CardContent>
               </Card>

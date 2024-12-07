@@ -7,7 +7,8 @@ export async function PUT(
 ) {
   try {
     const id = parseInt(params.id);
-    const formData = await request.formData();
+    const body = await request.json();
+    const { title, content, image } = body;
 
     if (isNaN(id)) {
       return NextResponse.json(
@@ -16,11 +17,6 @@ export async function PUT(
       );
     }
 
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-    let imageBytes = null;
-    const image = formData.get("image");
-
     if (!title || !content) {
       return NextResponse.json(
         { error: "Заголовок и содержание обязательны" },
@@ -28,9 +24,10 @@ export async function PUT(
       );
     }
 
-    if (image instanceof File) {
-      const bytes = await image.arrayBuffer();
-      imageBytes = Buffer.from(bytes);
+    let imageBuffer = null;
+    if (image) {
+      const base64Data = image.split(",")[1];
+      imageBuffer = Buffer.from(base64Data, "base64");
     }
 
     const result = await conn.query(
@@ -40,7 +37,7 @@ export async function PUT(
            image = COALESCE($3, image)
        WHERE id = $4 
        RETURNING *`,
-      [title, content, imageBytes, id]
+      [title, content, imageBuffer, id]
     );
 
     if (result.rows.length === 0) {

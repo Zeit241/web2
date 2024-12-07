@@ -276,9 +276,9 @@ export default function DashboardTable(props: { data: any; type: TableType }) {
                     <TableCell>{record.description}</TableCell>
                   </>
                 )}
-                <TableCell className="text-right pr-4 flex gap-0.5">
+                <TableCell className="text-left flex justify-end pr-4 gap-0.5">
                   <Button variant="outline" size="sm" onClick={() => handleEdit(record)}>
-                  <Pencil />
+                    <Pencil />
                   </Button>
                   <Button 
                     variant="outline" 
