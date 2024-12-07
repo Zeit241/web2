@@ -21,7 +21,7 @@ export const createSaveHandlers = ({
         method === "PUT" ? `/api/doctors/${updatedData.id}` : `/api/doctors`;
 
       console.log("updatedData", updatedData);
-
+      console.log("updatedData", JSON.stringify(updatedData));
       const response = await fetch(url, {
         method,
         body: JSON.stringify(updatedData),

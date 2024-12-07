@@ -107,7 +107,7 @@ export default function DoctorCard() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 mt-3">
-                    {doctor.description.slice(0, 180)}...
+                    {doctor.description.slice(0, 95)}...
                   </p>
                 </CardContent>
               </Card>

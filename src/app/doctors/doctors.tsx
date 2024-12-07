@@ -79,8 +79,8 @@ const SelectSkeleton = () => (
 const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   const [showDialog, setShowDialog] = useState(false);
 
-  // Преобразование Buffer в base64
   const getImageUrl = (photo: any): string => {
+
     return photo || "/images/doctor_placeholder.webp";
   };
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import conn from "@/lib/db";
-
+import mime from 'mime';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const specializationId = searchParams.get("specialization");
@@ -54,16 +54,18 @@ export async function GET(request: Request) {
     query += ` GROUP BY d.id, d.name, d.experience, d.photo, d.position, d.description`;
 
     const result = await conn.query(query, values);
-
-    result.rows.forEach((doctor: any) => {
-      if (doctor.photo) {
-        doctor.photo = `data:image/jpg;base64,${doctor.photo.toString(
-          "base64"
-        )}`;
+    
+    const x = result.rows.map(e=>{
+      if(e.photo){
+        const base64Data = Buffer.from(e.photo).toString('base64');
+      const dataUri = `data:${"application/octet-stream"};base64,${base64Data.split("base64")[1]}`;
+        e.photo = dataUri
+        console.log(dataUri)
       }
-    });
-
-    return NextResponse.json({ doctors: result.rows });
+      return e
+    })
+    
+    return NextResponse.json({ doctors: x });
   } catch (error) {
     console.error("Error fetching doctors:", error);
     return NextResponse.json(
@@ -111,8 +113,9 @@ export async function POST(req: Request) {
       }
 
       if (photo) {
+       
         const buffer = Buffer.from(photo, "base64");
-
+        console.log("photo", buffer);
         await conn.query(`UPDATE doctors SET photo = $1 WHERE id = $2`, [
           buffer,
           doctorId,
