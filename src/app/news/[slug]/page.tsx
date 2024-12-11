@@ -1,18 +1,15 @@
 import React from 'react'
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { CalendarDays, ArrowLeft } from 'lucide-react'
 import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { notFound } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 
 async function getArticle(id: string) {
   try {
-    const response = await fetch(`http://localhost:3000/api/news?id=${id}`);
+    const response = await fetch(`https://zeit-dev.site/api/news?id=${id}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
